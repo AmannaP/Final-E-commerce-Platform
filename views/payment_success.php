@@ -16,212 +16,181 @@ $reference = isset($_GET['reference']) ? htmlspecialchars($_GET['reference']) : 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Successful - GBVAid</title>
+    <title>Booking Confirmed - GBVAid</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        /* 1. Purple Background */
+        /* Purple Background */
         body { 
-            font-family: 'Inter', sans-serif; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             background-color: #c453eaff; 
             min-height: 100vh;
         }
         
-        /* Navbar Styling */
+        /* Navbar */
         .navbar { 
-            background: black; 
-            padding: 20px 0; 
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); 
+            background: white; 
+            padding: 15px 0; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
         }
-        .nav-container { 
-            max-width: 1400px; 
-            margin: 0 auto; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 0 40px; 
-        }
-        .logo { 
-            font-family: 'Segoe UI', serif; 
+        .navbar-brand { 
             font-weight: bold;
-            font-size: 28px; 
-            color: #c453eaff; 
-            text-decoration: none; 
+            font-size: 24px; 
+            color: #c453eaff !important; 
         }
         .nav-link {
-            color: #c453eaff;
+            color: #555;
+            font-weight: 600;
             text-decoration: none;
-            font-weight: 500;
-        }
-        .nav-link:hover {
-            text-decoration: underline;
         }
         
-        .container { max-width: 700px; margin: 60px auto; padding: 0 20px; }
-        
-        /* 2. Success Box (White Card) */
+        /* Success Box */
         .success-box { 
             background: white; 
             border-radius: 20px; 
             padding: 50px 40px; 
             text-align: center;
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-top: 60px;
         }
         
         .success-icon { 
             font-size: 80px; 
             margin-bottom: 20px; 
             animation: bounce 1s ease-in-out;
-            color: #c453eaff;
+            color: #10b981; /* Green for success */
         }
-        
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
         }
         
-        h1 { 
-            font-family: 'Segoe UI', serif; 
-            font-size: 2.5rem; 
-            color: #c453eaff; 
-            margin-bottom: 10px; 
+        .confirmation-message { 
+            background: #d1fae5; 
+            border: 1px solid #10b981; 
+            padding: 20px; 
+            border-radius: 12px; 
+            color: #065f46;
+            margin-bottom: 30px;
+            font-size: 15px;
         }
         
-        .subtitle { 
-            font-size: 18px; 
-            color: #6b7280; 
-            margin-bottom: 30px; 
-        }
-        
-        .order-details { 
-            background: #f9fafb; 
+        .booking-details { 
+            background: #f8f9fa; 
             padding: 30px; 
             border-radius: 12px; 
-            margin: 30px 0; 
+            margin-bottom: 30px; 
             text-align: left;
-            border: 1px solid #e5e7eb;
+            border: 1px solid #eee;
         }
         
         .detail-row { 
             display: flex; 
             justify-content: space-between; 
             padding: 12px 0; 
-            border-bottom: 1px solid #e5e7eb;
-            color: #374151;
+            border-bottom: 1px solid #eee;
+            color: #555;
         }
-        
         .detail-row:last-child { border-bottom: none; }
         .detail-label { font-weight: 600; }
-        .detail-value { color: #6b7280; word-break: break-all; }
         
-        /* 3. Buttons */
-        .btn { 
-            padding: 14px 30px; 
-            border: none; 
-            border-radius: 50px; 
-            font-size: 16px; 
-            font-weight: 600; 
-            cursor: pointer; 
-            transition: all 0.3s ease; 
-            text-decoration: none; 
-            display: inline-block;
-            margin: 10px;
-        }
-        
-        .btn-primary { 
+        /* Buttons */
+        .btn-purple { 
             background-color: #c453eaff; 
             color: white; 
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
             border: 2px solid #c453eaff;
-            box-shadow: 0 4px 15px rgba(196, 83, 234, 0.4); 
+            transition: all 0.3s;
         }
-        
-        .btn-primary:hover { 
+        .btn-purple:hover { 
             background-color: white; 
-            color: #c453eaff;
-            transform: translateY(-2px);
-        }
-        
-        .btn-secondary { 
-            background: white; 
             color: #c453eaff; 
-            border: 2px solid #c453eaff; 
         }
         
-        .btn-secondary:hover { 
-            background: #f3e8ff; 
+        .btn-secondary-custom { 
+            background: white; 
+            color: #555; 
+            border: 2px solid #eee; 
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        .btn-secondary-custom:hover { 
+            border-color: #c453eaff;
+            color: #c453eaff;
         }
         
         .buttons-container { 
             display: flex; 
             justify-content: center; 
-            margin-top: 30px; 
+            gap: 15px;
             flex-wrap: wrap;
-        }
-        
-        /* 4. Confirmation Message */
-        .confirmation-message { 
-            background: #f3e8ff; 
-            border: 1px solid #d8b4fe; 
-            padding: 20px; 
-            border-radius: 12px; 
-            color: #7e22ce;
-            margin-bottom: 20px;
-            font-size: 15px;
         }
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="../index.php" class="logo">GBVAid</a>
-            <div style="display: flex; gap: 20px;">
-                <a href="../user/product_page.php" class="nav-link">← Continue Shopping</a>
-            </div>
+    <nav class="navbar fixed-top">
+        <div class="container">
+            <a href="../index.php" class="navbar-brand">GBVAid</a>
+            <a href="../user/product_page.php" class="nav-link">← Return to Services</a>
         </div>
     </nav>
 
     <div class="container">
-        <div class="success-box">
-            <div class="success-icon">🎉</div>
-            <h1>Order Successful!</h1>
-            <p class="subtitle">Your payment has been processed successfully</p>
-            
-            <div class="confirmation-message">
-                <strong><i class="bi bi-check-circle-fill"></i> Payment Confirmed</strong><br>
-                Thank you for your purchase! Your order has been confirmed and will be processed shortly.
-            </div>
-            
-            <div class="order-details">
-                <div class="detail-row">
-                    <span class="detail-label">Invoice Number</span>
-                    <span class="detail-value" style="color: #c453eaff; font-weight: bold;"><?php echo $invoice_no; ?></span>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="success-box">
+                    <div class="success-icon"><i class="bi bi-check-circle-fill"></i></div>
+                    <h2 class="fw-bold mb-3">Booking Confirmed!</h2>
+                    <p class="text-muted mb-4">Your session has been scheduled successfully.</p>
+                    
+                    <div class="confirmation-message">
+                        <strong><i class="bi bi-shield-check me-2"></i> Payment Secured</strong><br>
+                        Thank you. Your support session details have been sent to your email.
+                    </div>
+                    
+                    <div class="booking-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Invoice Number</span>
+                            <span class="fw-bold" style="color: #c453eaff;"><?php echo $invoice_no; ?></span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Payment Reference</span>
+                            <span><?php echo $reference; ?></span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Date Processed</span>
+                            <span><?php echo date('F j, Y - h:i A'); ?></span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Status</span>
+                            <span class="text-success fw-bold">Active <i class="bi bi-check-lg"></i></span>
+                        </div>
+                    </div>
+                    
+                    <div class="buttons-container">
+                        <a href="../user/my_appointments.php" class="btn-purple">
+                            <i class="bi bi-calendar-event me-2"></i>View Appointments
+                        </a>
+                        <a href="../user/product_page.php" class="btn-secondary-custom">
+                            Find More Services
+                        </a>
+                    </div>
                 </div>
-                <div class="detail-row">
-                    <span class="detail-label">Payment Reference</span>
-                    <span class="detail-value"><?php echo $reference; ?></span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Order Date</span>
-                    <span class="detail-value"><?php echo date('F j, Y - h:i A'); ?></span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Status</span>
-                    <span class="detail-value" style="color: #10b981; font-weight: 600;">Paid <i class="bi bi-check-lg"></i></span>
-                </div>
-            </div>
-            
-            <div class="buttons-container">
-                <a href="my_orders.php" class="btn btn-primary">📦 View My Orders</a>
-                <a href="../user/product_page.php" class="btn btn-secondary">Continue Shopping</a>
             </div>
         </div>
     </div>
 
     <script>
-        // Confetti effect (Updated colors for Purple Theme)
+        // Confetti effect
         function createConfetti() {
-            // Purple, Dark Purple, White, Gold, Green
             const colors = ['#c453eaff', '#a020f0', '#ffffff', '#ffd700', '#10b981'];
             const confettiCount = 60;
             
@@ -255,26 +224,20 @@ $reference = isset($_GET['reference']) ? htmlspecialchars($_GET['reference']) : 
                         
                         if (progress < 1) {
                             const top = progress * (window.innerHeight + 50);
-                            // Add horizontal sway
                             const wobble = Math.sin(progress * 10) * 30;
-                            
                             confetti.style.top = top + 'px';
                             confetti.style.left = `calc(${parseFloat(confetti.style.left)}% + ${wobble}px)`;
                             confetti.style.opacity = 1 - progress;
                             confetti.style.transform = `rotate(${progress * 720}deg)`;
-                            
                             requestAnimationFrame(animateConfetti);
                         } else {
                             confetti.remove();
                         }
                     }
-                    
                     animateConfetti();
                 }, i * 30);
             }
         }
-        
-        // Trigger confetti on page load
         window.addEventListener('load', createConfetti);
     </script>
 </body>

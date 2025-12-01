@@ -67,4 +67,12 @@ function delete_product_ctr($product_id) {
     return $p->deleteProduct($product_id);
 }
 
+/**
+ * Controller to get a single product
+ */
+function get_one_product_ctr($id) {
+    $product_instance = new product();
+    return $product_instance->get_one_product($id);
+}
+
 ?>

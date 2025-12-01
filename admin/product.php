@@ -18,7 +18,7 @@ $brands = fetch_brands_ctr();
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Manage Products | GBVAid Admin</title>
+    <title>Manage Services | GBVAid Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -167,7 +167,7 @@ $brands = fetch_brands_ctr();
                     <li class="nav-item mx-2"><a href="../admin/dashboard.php" class="nav-link">Dashboard</a></li>
                     <li class="nav-item mx-2"><a href="../admin/brand.php" class="nav-link">Brands</a></li>
                     <li class="nav-item mx-2"><a href="../admin/category.php" class="nav-link">Categories</a></li>
-                    <li class="nav-item mx-2"><a href="../admin/product.php" class="nav-link active">Products</a></li>
+                    <li class="nav-item mx-2"><a href="../admin/product.php" class="nav-link active">Services</a></li>
                     <li class="nav-item ms-4">
                         <a href="../login/logout.php" class="btn-logout">Logout</a>
                     </li>
@@ -179,13 +179,13 @@ $brands = fetch_brands_ctr();
     <div class="container mt-5">
         
         <div class="text-center mb-5">
-            <h2 class="fw-bold" style="color: #c453eaff;">Product Management</h2>
-            <p class="text-muted">Add, edit, and organize support services and products.</p>
+            <h2 class="fw-bold" style="color: #c453eaff;">Service Management</h2>
+            <p class="text-muted">Add, edit, and organize support services.</p>
         </div>
 
         <div class="content-card">
             <div class="card-header-custom">
-                <h5 class="fw-bold mb-0"><i class="bi bi-plus-square me-2"></i>Add / Edit Product</h5>
+                <h5 class="fw-bold mb-0"><i class="bi bi-plus-square me-2"></i>Add / Edit Services</h5>
             </div>
             <div class="card-body">
                 <form id="product-form" enctype="multipart/form-data">
@@ -229,11 +229,11 @@ $brands = fetch_brands_ctr();
 
                         <div class="col-md-12">
                             <label class="form-label fw-bold small text-muted">Description</label>
-                            <textarea id="product_desc" name="product_desc" class="form-control" rows="4" placeholder="Describe the service or product..."></textarea>
+                            <textarea id="product_desc" name="product_desc" class="form-control" rows="4" placeholder="Describe the service ..."></textarea>
                         </div>
 
                         <div class="col-md-12">
-                            <label class="form-label fw-bold small text-muted">Product Image</label>
+                            <label class="form-label fw-bold small text-muted">Service Image</label>
                             <input type="file" id="product_image" name="product_image" class="form-control" accept="image/*">
                             <div class="form-text">Accepted formats: JPG, PNG, WEBP, GIF. Max size: 5MB.</div>
                         </div>
@@ -241,7 +241,7 @@ $brands = fetch_brands_ctr();
                     
                     <div class="mt-4 text-end border-top pt-3">
                         <button type="button" id="reset-form" class="btn btn-secondary-custom me-2">Reset</button>
-                        <button type="submit" id="save-product" class="btn btn-purple px-4"><i class="bi bi-save me-2"></i>Save Product</button>
+                        <button type="submit" id="save-product" class="btn btn-purple px-4"><i class="bi bi-save me-2"></i>Save Service</button>
                     </div>
                 </form>
             </div>
@@ -249,7 +249,7 @@ $brands = fetch_brands_ctr();
 
         <div class="content-card">
             <div class="card-header-custom">
-                <h5 class="fw-bold mb-0"><i class="bi bi-list-ul me-2"></i>Existing Products</h5>
+                <h5 class="fw-bold mb-0"><i class="bi bi-list-ul me-2"></i>Existing Services</h5>
             </div>
             <div class="p-0">
                 <div class="table-responsive">

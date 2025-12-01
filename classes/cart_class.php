@@ -6,70 +6,57 @@ require_once("../settings/db_class.php");
 class cart_class extends db_conn
 {
     /**
-     * Add a product to cart (for guests or logged-in users)
+     * Add a service to cart with booking details
      */
-    public function add_to_cart($p_id, $ip_add, $c_id, $qty) {
-        // 1. FIX: Ensure DB is connected before using $this->db
-        if (!$this->db_connect()) {
-            error_log("Add to Cart Error: Could not connect to database");
-            return false;
-        }
+    public function add_to_cart($p_id, $ip_add, $c_id, $qty, $date = null, $time = null, $notes = null) {
+        if (!$this->db_connect()) return false;
 
         try {
+            $notes = $notes ? htmlspecialchars($notes) : null;
+
             if ($c_id !== null) {
-                // LOGGED-IN USER LOGIC
-                
-                // Check if item exists
+                // LOGGED-IN USER
                 $check_sql = "SELECT qty FROM cart WHERE p_id = ? AND c_id = ?";
                 $check_stmt = $this->db->prepare($check_sql);
                 $check_stmt->execute([$p_id, $c_id]);
                 $existing = $check_stmt->fetch(PDO::FETCH_ASSOC);
 
                 if ($existing) {
-                    // Update quantity
                     $new_qty = $existing['qty'] + $qty;
-                    $sql = "UPDATE cart SET qty = ? WHERE p_id = ? AND c_id = ?";
+                    $sql = "UPDATE cart SET qty = ?, booking_date = ?, booking_time = ?, notes = ? WHERE p_id = ? AND c_id = ?";
                     $stmt = $this->db->prepare($sql);
-                    return $stmt->execute([$new_qty, $p_id, $c_id]);
+                    return $stmt->execute([$new_qty, $date, $time, $notes, $p_id, $c_id]);
                 } else {
-                    // Insert new
-                    // 2. FIX: Include ip_add even for logged-in users to satisfy strict DB rules
-                    $sql = "INSERT INTO cart (p_id, c_id, ip_add, qty) VALUES (?, ?, ?, ?)";
+                    $sql = "INSERT INTO cart (p_id, c_id, ip_add, qty, booking_date, booking_time, notes) VALUES (?, ?, ?, ?, ?, ?, ?)";
                     $stmt = $this->db->prepare($sql);
-                    return $stmt->execute([$p_id, $c_id, $ip_add, $qty]);
+                    return $stmt->execute([$p_id, $c_id, $ip_add, $qty, $date, $time, $notes]);
                 }
             } else {
-                // GUEST USER LOGIC
-                
-                // Check if item exists
+                // GUEST USER
                 $check_sql = "SELECT qty FROM cart WHERE p_id = ? AND ip_add = ? AND c_id IS NULL";
                 $check_stmt = $this->db->prepare($check_sql);
                 $check_stmt->execute([$p_id, $ip_add]);
                 $existing = $check_stmt->fetch(PDO::FETCH_ASSOC);
 
                 if ($existing) {
-                    // Update quantity
                     $new_qty = $existing['qty'] + $qty;
-                    $sql = "UPDATE cart SET qty = ? WHERE p_id = ? AND ip_add = ? AND c_id IS NULL";
+                    $sql = "UPDATE cart SET qty = ?, booking_date = ?, booking_time = ?, notes = ? WHERE p_id = ? AND ip_add = ? AND c_id IS NULL";
                     $stmt = $this->db->prepare($sql);
-                    return $stmt->execute([$new_qty, $p_id, $ip_add]);
+                    return $stmt->execute([$new_qty, $date, $time, $notes, $p_id, $ip_add]);
                 } else {
-                    // Insert new
-                    $sql = "INSERT INTO cart (p_id, ip_add, qty) VALUES (?, ?, ?)";
+                    $sql = "INSERT INTO cart (p_id, ip_add, qty, booking_date, booking_time, notes) VALUES (?, ?, ?, ?, ?, ?)";
                     $stmt = $this->db->prepare($sql);
-                    return $stmt->execute([$p_id, $ip_add, $qty]);
+                    return $stmt->execute([$p_id, $ip_add, $qty, $date, $time, $notes]);
                 }
             }
         } catch (Exception $e) {
             error_log("Add to cart error: " . $e->getMessage());
             return false;
         }
-    }
-
-    // ... (The rest of your functions are fine, keep them as is below) ...
+    } 
 
     /**
-     * Check if the product already exists in user cart
+     * Check duplicate
      */
     public function check_cart_duplicate($p_id, $ip_add, $c_id)
     {
@@ -81,21 +68,18 @@ class cart_class extends db_conn
     }
 
     /**
-     * Update cart quantity
+     * Update quantity
      */
     public function update_quantity($p_id, $ip_add, $c_id, $qty)
     {
-        // Ensure DB connection
         if (!$this->db_connect()) return false;
 
         try {
             if ($c_id !== null && $c_id > 0) {
-                // Logged-in user
                 $sql = "UPDATE cart SET qty = ? WHERE p_id = ? AND c_id = ?";
                 $stmt = $this->db->prepare($sql);
                 return $stmt->execute([$qty, $p_id, $c_id]);
             } else {
-                // Guest user
                 $sql = "UPDATE cart SET qty = ? WHERE p_id = ? AND ip_add = ? AND (c_id IS NULL OR c_id = 0)";
                 $stmt = $this->db->prepare($sql);
                 return $stmt->execute([$qty, $p_id, $ip_add]);
@@ -106,7 +90,7 @@ class cart_class extends db_conn
     }
 
     /**
-     * Remove a product from the cart
+     * Remove from cart
      */
     public function remove_from_cart($p_id, $ip_add, $c_id) {
         if (!$this->db_connect()) return false;
@@ -128,12 +112,13 @@ class cart_class extends db_conn
 
     /**
      * Get cart items by customer ID
+     * UPDATED: Now selects booking_date, booking_time, notes
      */
     function get_cart_by_customer($customer_id) {
         if (!$this->db_connect()) return [];
 
-        $sql = "SELECT c.p_id, c.qty, p.product_title, p.product_price, 
-                    p.product_image, p.product_desc
+        $sql = "SELECT c.p_id, c.qty, c.booking_date, c.booking_time, c.notes, 
+                       p.product_title, p.product_price, p.product_image, p.product_desc
                 FROM cart c
                 JOIN products p ON c.p_id = p.product_id
                 WHERE c.c_id = ?";
@@ -143,11 +128,15 @@ class cart_class extends db_conn
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Get cart items by IP
+     * UPDATED: Now selects booking_date, booking_time, notes
+     */
     function get_cart_by_ip($ip_address) {
         if (!$this->db_connect()) return [];
 
-        $sql = "SELECT c.p_id, c.qty, p.product_title, p.product_price, 
-                    p.product_image, p.product_desc
+        $sql = "SELECT c.p_id, c.qty, c.booking_date, c.booking_time, c.notes, 
+                       p.product_title, p.product_price, p.product_image, p.product_desc
                 FROM cart c
                 JOIN products p ON c.p_id = p.product_id
                 WHERE c.ip_add = ? AND c.c_id IS NULL";
@@ -178,14 +167,13 @@ class cart_class extends db_conn
         }
     }
 
-    // Keep the rest of your methods (merge_guest_cart, etc.)
+    // Merge logic...
     function merge_guest_cart($customer_id, $ip_address) {
         if (!$this->db_connect()) return false;
         
-        // ... (Keep your existing merge logic here) ...
-        // Just make sure to ensure connection at the start
         try {
-            $sql = "SELECT p_id, qty FROM cart WHERE ip_add = ? AND c_id IS NULL";
+            // Updated to select all booking details
+            $sql = "SELECT p_id, qty, booking_date, booking_time, notes FROM cart WHERE ip_add = ? AND c_id IS NULL";
             $stmt = $this->db->prepare($sql);
             $stmt->execute([$ip_address]);
             $guest_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -195,8 +183,10 @@ class cart_class extends db_conn
             foreach ($guest_items as $item) {
                 $p_id = $item['p_id'];
                 $qty = $item['qty'];
+                $date = $item['booking_date'];
+                $time = $item['booking_time'];
+                $notes = $item['notes'];
                 
-                // Check exist
                 $check_sql = "SELECT qty FROM cart WHERE p_id = ? AND c_id = ?";
                 $check_stmt = $this->db->prepare($check_sql);
                 $check_stmt->execute([$p_id, $customer_id]);
@@ -204,17 +194,17 @@ class cart_class extends db_conn
                 
                 if ($existing) {
                     $new_qty = $existing['qty'] + $qty;
-                    $up_sql = "UPDATE cart SET qty = ? WHERE p_id = ? AND c_id = ?";
+                    // Update existing with guest details if provided
+                    $up_sql = "UPDATE cart SET qty = ?, booking_date = ?, booking_time = ?, notes = ? WHERE p_id = ? AND c_id = ?";
                     $up_stmt = $this->db->prepare($up_sql);
-                    $up_stmt->execute([$new_qty, $p_id, $customer_id]);
+                    $up_stmt->execute([$new_qty, $date, $time, $notes, $p_id, $customer_id]);
                 } else {
-                    $in_sql = "INSERT INTO cart (p_id, c_id, ip_add, qty) VALUES (?, ?, ?, ?)";
+                    $in_sql = "INSERT INTO cart (p_id, c_id, ip_add, qty, booking_date, booking_time, notes) VALUES (?, ?, ?, ?, ?, ?, ?)";
                     $in_stmt = $this->db->prepare($in_sql);
-                    $in_stmt->execute([$p_id, $customer_id, $ip_address, $qty]);
+                    $in_stmt->execute([$p_id, $customer_id, $ip_address, $qty, $date, $time, $notes]);
                 }
             }
             
-            // Delete guest
             $del_sql = "DELETE FROM cart WHERE ip_add = ? AND c_id IS NULL";
             $del_stmt = $this->db->prepare($del_sql);
             $del_stmt->execute([$ip_address]);

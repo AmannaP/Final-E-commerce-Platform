@@ -87,6 +87,20 @@ class Product extends db_conn {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Get a single product by ID
+     */
+    public function get_one_product($id) {
+        // Prepare query (using join to get category/brand names if needed)
+        $sql = "SELECT p.*, c.cat_name, b.brand_name 
+                FROM products p
+                LEFT JOIN categories c ON p.product_cat = c.cat_id
+                LEFT JOIN brands b ON p.product_brand = b.brand_id
+                WHERE p.product_id = '$id'";
+        
+        return $this->db_fetch_one($sql);
+    }
+
     // View single product
     public function view_single_product($id) {
         $sql = "SELECT p.*, c.cat_name, b.brand_name 

@@ -152,12 +152,12 @@ $customer_name = $is_logged_in ? ($_SESSION['name'] ?? 'User') : 'Guest';
                 </li>
                 
                 <li class="nav-item">
-                    <a class="nav-link" href="../user/product_page.php">Products</a>
+                    <a class="nav-link" href="../user/product_page.php">Services</a>
                 </li>
 
                 <li class="nav-item position-relative">
                     <a class="nav-link" href="../views/cart.php">
-                        <i class="bi bi-cart3" style="font-size: 1.2rem;"></i> Cart
+                        <i class="bi bi-cart3" style="font-size: 1.2rem;"></i> Bookings
                         <?php if ($cart_count > 0): ?>
                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-notification">
                                 <?= $cart_count ?>
@@ -180,7 +180,7 @@ $customer_name = $is_logged_in ? ($_SESSION['name'] ?? 'User') : 'Guest';
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                             <li><a class="dropdown-item" href="../user/profile.php"><i class="bi bi-person me-2"></i>My Profile</a></li>
-                            <li><a class="dropdown-item" href="../views/my_orders.php"><i class="bi bi-box-seam me-2"></i>My Orders</a></li>
+                            <li><a class="dropdown-item" href="../user/my_appointments.php"><i class="bi bi-box-seam me-2"></i>My Appointments</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item text-danger" href="../login/logout.php"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
                         </ul>

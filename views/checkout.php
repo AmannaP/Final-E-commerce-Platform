@@ -17,7 +17,7 @@ if (!$cart_items || count($cart_items) == 0) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout - GBVAid</title>
+    <title>Complete Booking - GBVAid</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     
@@ -76,7 +76,7 @@ if (!$cart_items || count($cart_items) == 0) {
             font-weight: 700;
         }
         
-        /* 4. Order Summary Styles */
+        /* 4. Booking Summary Styles */
         .checkout-item {
             transition: background-color 0.2s;
         }
@@ -167,19 +167,19 @@ if (!$cart_items || count($cart_items) == 0) {
         <div class="container">
             <a href="../index.php" class="logo">GBVAid</a>
             <a href="cart.php" class="nav-link-custom">
-                <i class="bi bi-arrow-left me-1"></i> Back to Cart
+                <i class="bi bi-arrow-left me-1"></i> Back to Booking List
             </a>
         </div>
     </nav>
 
     <div class="container" style="margin-top: 100px;">
         <div class="mb-4">
-            <h2 class="page-title"><i class="bi bi-credit-card me-2"></i>Checkout</h2>
-            <p style="color: rgba(255,255,255,0.8);">Review your order and complete payment securely</p>
+            <h2 class="page-title"><i class="bi bi-calendar-check me-2"></i>Finalize Booking</h2>
+            <p style="color: rgba(255,255,255,0.8);">Review your selected services and confirm details</p>
         </div>
 
         <div class="checkout-card">
-            <h4 class="section-header">Order Summary</h4>
+            <h4 class="section-header">Booking Summary</h4>
             
             <div id="checkoutItemsContainer">
                 <div class="text-center py-4">
@@ -190,12 +190,12 @@ if (!$cart_items || count($cart_items) == 0) {
             </div>
             
             <div class="summary-total-container">
-                <span class="total-label">Total Amount to Pay:</span><br>
+                <span class="total-label">Total Cost:</span><br>
                 <span id="checkoutTotal" class="total-amount">GH₵ 0.00</span>
             </div>
             
             <button onclick="showPaymentModal()" class="btn btn-purple btn-lg">
-                <i class="bi bi-lock-fill me-2"></i> Proceed to Secure Payment
+                <i class="bi bi-shield-lock-fill me-2"></i> Confirm & Secure Booking
             </button>
         </div>
     </div>
@@ -204,27 +204,27 @@ if (!$cart_items || count($cart_items) == 0) {
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title fw-bold">Secure Payment</h5>
+                    <h5 class="modal-title fw-bold">Secure Booking</h5>
                     <button type="button" class="btn-close" onclick="closePaymentModal()"></button>
                 </div>
                 <div class="modal-body p-4">
                     <div class="text-center mb-4">
-                        <small class="text-muted">TOTAL AMOUNT</small>
+                        <small class="text-muted">TOTAL COST</small>
                         <div id="paymentAmount" style="font-size: 36px; font-weight: 800; color: #c453eaff;"></div>
                     </div>
                     
                     <div class="secure-badge">
                         <div class="fw-bold mb-1"><i class="bi bi-shield-lock-fill text-success me-1"></i> SSL SECURED PAYMENT</div>
-                        <small class="text-muted">Powered by Paystack. Your data is encrypted.</small>
+                        <small class="text-muted">Powered by Paystack. Your details are encrypted.</small>
                     </div>
                     
                     <p class="text-center text-muted small mb-4">
-                        You will be redirected to Paystack to complete your purchase using Card or Mobile Money.
+                        You will be redirected to Paystack to secure your session.
                     </p>
                     
                     <div class="d-grid gap-2">
                         <button onclick="processCheckout()" id="confirmPaymentBtn" class="btn btn-purple">
-                            Pay Now
+                            Confirm Payment
                         </button>
                         <button onclick="closePaymentModal()" class="btn btn-light text-muted">Cancel</button>
                     </div>
@@ -240,7 +240,7 @@ if (!$cart_items || count($cart_items) == 0) {
                     <div style="font-size: 60px; color: #10b981; margin-bottom: 20px;">
                         <i class="bi bi-check-circle-fill"></i>
                     </div>
-                    <h2 class="fw-bold mb-3">Order Successful!</h2>
+                    <h2 class="fw-bold mb-3">Booking Confirmed!</h2>
                     
                     <div class="bg-light p-3 rounded mb-4 border">
                         <div class="d-flex justify-content-between mb-2">
@@ -257,11 +257,11 @@ if (!$cart_items || count($cart_items) == 0) {
                         </div>
                     </div>
                     
-                    <p class="text-muted mb-4">Thank you for your order! Your items are being processed.</p>
+                    <p class="text-muted mb-4">Thank you! Your support session has been scheduled successfully.</p>
                     
                     <div class="d-flex gap-2 justify-content-center">
-                        <button onclick="continueShopping()" class="btn btn-secondary-custom">Shop More</button>
-                        <button onclick="viewOrders()" class="btn btn-purple" style="width: auto;">View Orders</button>
+                        <button onclick="continueShopping()" class="btn btn-secondary-custom">Find Services</button>
+                        <button onclick="viewOrders()" class="btn btn-purple" style="width: auto;">View Appointments</button>
                     </div>
                 </div>
             </div>
@@ -316,6 +316,16 @@ if (!$cart_items || count($cart_items) == 0) {
             // Trigger confetti if function exists
             if (typeof createConfetti === 'function') createConfetti();
         };
+        
+        // Navigation overrides for the new context
+        function continueShopping() {
+            window.location.href = '../user/product_page.php';
+        }
+        
+        function viewOrders() {
+            // Changed link to My Appointments
+            window.location.href = '../user/my_appointments.php';
+        }
     </script>
 </body>
 </html>

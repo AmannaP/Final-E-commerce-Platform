@@ -1,50 +1,53 @@
 <?php
 // views/paystack_callback.php
-/**
- * Paystack Payment Callback Handler
- * This page is called after Paystack payment process
- * User is redirected here by Paystack after payment
- */
-
 require_once '../settings/core.php';
 require_once '../settings/paystack_config.php';
 
-// Check if user is logged in
 if (!checkLogin()) {
     header('Location: ../login/login.php');
     exit();
 }
 
-// Get reference from URL
 $reference = isset($_GET['reference']) ? trim($_GET['reference']) : null;
 
 if (!$reference) {
-    // Payment cancelled or reference missing
     header('Location: checkout.php?error=cancelled');
     exit();
 }
-
-error_log("=== PAYSTACK CALLBACK PAGE ===");
-error_log("Reference from URL: $reference");
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Processing Payment - GBVAid</title>
+    <title>Processing Booking - GBVAid</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background-color: #c453eaff; 
+            min-height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
         
-        .container { max-width: 500px; width: 90%; background: white; padding: 60px 40px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1); text-align: center; }
+        .container { 
+            max-width: 500px; 
+            width: 90%; 
+            background: white; 
+            padding: 60px 40px; 
+            border-radius: 20px; 
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2); 
+            text-align: center; 
+        }
         
         .spinner {
             display: inline-block;
-            width: 50px;
-            height: 50px;
-            border: 4px solid #f3f4f6;
-            border-top: 4px solid #dc2626;
+            width: 60px;
+            height: 60px;
+            border: 5px solid #f3e8ff;
+            border-top: 5px solid #c453eaff;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin-bottom: 30px;
@@ -55,24 +58,32 @@ error_log("Reference from URL: $reference");
             100% { transform: rotate(360deg); }
         }
         
-        h1 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: #1a1a1a; margin-bottom: 15px; }
-        p { color: #6b7280; font-size: 16px; line-height: 1.6; margin-bottom: 20px; }
+        h1 { color: #333; margin-bottom: 15px; font-weight: 700; }
+        p { color: #666; margin-bottom: 20px; }
         
-        .reference { background: #f9fafb; padding: 15px; border-radius: 8px; margin: 25px 0; word-break: break-all; font-family: monospace; font-size: 12px; color: #6b7280; }
+        .reference { 
+            background: #f8f9fa; 
+            padding: 15px; 
+            border-radius: 10px; 
+            font-family: monospace; 
+            color: #555;
+            border: 1px solid #eee; 
+        }
         
-        .error { color: #dc2626; background: #fee2e2; border: 2px solid #fecaca; padding: 15px; border-radius: 8px; margin: 20px 0; display: none; }
-        .success { color: #065f46; background: #d1fae5; border: 2px solid #6ee7b7; padding: 15px; border-radius: 8px; margin: 20px 0; display: none; }
+        .error, .success { padding: 15px; border-radius: 8px; margin: 20px 0; display: none; }
+        .error { color: #dc2626; background: #fee2e2; border: 1px solid #fecaca; }
+        .success { color: #065f46; background: #d1fae5; border: 1px solid #6ee7b7; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="spinner" id="spinner"></div>
         
-        <h1>Verifying Payment</h1>
-        <p>Please wait while we verify your payment with Paystack...</p>
+        <h1>Securing Session</h1>
+        <p>Please wait while we confirm your booking...</p>
         
         <div class="reference">
-            Payment Reference: <strong><?php echo htmlspecialchars($reference); ?></strong>
+            Ref: <strong><?php echo htmlspecialchars($reference); ?></strong>
         </div>
         
         <div class="error" id="errorBox">
@@ -80,77 +91,46 @@ error_log("Reference from URL: $reference");
         </div>
         
         <div class="success" id="successBox">
-            <strong>Success!</strong> Your payment has been verified. Redirecting...
+            <strong>Success!</strong> Booking confirmed. Redirecting...
         </div>
     </div>
 
     <script>
-        /**
-         * Verify payment with backend
-         */
         async function verifyPayment() {
             const reference = '<?php echo htmlspecialchars($reference); ?>';
             
             try {
+                // Call the backend to verify and SAVE bookings
                 const response = await fetch('../actions/paystack_verify_payment.php', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        reference: reference,
-                        cart_items: null, // Will be fetched from backend
-                        total_amount: null // Will be calculated from cart
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ reference: reference })
                 });
                 
                 const data = await response.json();
-                console.log('Verification response:', data);
                 
-                // Hide spinner
                 document.getElementById('spinner').style.display = 'none';
                 
-                if (data.status === 'success' && data.verified) {
-                    // Payment verified successfully
+                if (data.status === 'success') {
                     document.getElementById('successBox').style.display = 'block';
-                    
-                    // Redirect to success page immediately
                     setTimeout(() => {
-                        // Redirect to orders or success page
                         window.location.replace(`payment_success.php?reference=${encodeURIComponent(reference)}&invoice=${encodeURIComponent(data.invoice_no)}`);
-                    }, 500);
-                    
+                    }, 1000);
                 } else {
-                    // Payment verification failed
-                    const errorMsg = data.message || 'Payment verification failed';
-                    showError(errorMsg);
-                    
-                    // Redirect after 5 seconds
-                    setTimeout(() => {
-                        window.location.href = 'checkout.php?error=verification_failed';
-                    }, 5000);
+                    showError(data.message || 'Verification failed');
+                    setTimeout(() => { window.location.href = 'checkout.php?error=failed'; }, 4000);
                 }
-                
             } catch (error) {
-                console.error('Verification error:', error);
-                showError('Connection error. Please try again or contact support.');
-                
-                // Redirect after 5 seconds
-                setTimeout(() => {
-                    window.location.href = 'checkout.php?error=connection_error';
-                }, 5000);
+                console.error(error);
+                showError('Connection error. Please contact support.');
             }
         }
         
-        /**
-         * Show error message
-         */
-        function showError(message) {
+        function showError(msg) {
             document.getElementById('errorBox').style.display = 'block';
-            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('errorMessage').textContent = msg;
         }
         
-        // Start verification when page loads
         window.addEventListener('load', verifyPayment);
     </script>
 </body>

@@ -1,57 +1,69 @@
 <?php
 require_once '../settings/core.php';
+require_once '../controllers/chat_controller.php';
+
 if (!checkLogin()) header("Location: ../login/login.php");
+
+$groups = get_chat_groups_ctr();
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Chat with Counselor | GBVAid</title>
+    <title>Support Groups | GBVAid</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        .chat-box { height: 400px; background: #fff; border-radius: 10px; overflow-y: auto; padding: 20px; border: 1px solid #eee; }
-        .message { margin-bottom: 15px; padding: 10px 15px; border-radius: 15px; max-width: 75%; }
-        .message.sent { background-color: #c453eaff; color: white; margin-left: auto; border-bottom-right-radius: 2px; }
-        .message.received { background-color: #f1f0f0; color: #333; margin-right: auto; border-bottom-left-radius: 2px; }
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; }
+        .group-card {
+            transition: transform 0.2s;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            background: white;
+        }
+        .group-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(196, 83, 234, 0.2);
+        }
+        .icon-box {
+            width: 60px; height: 60px;
+            background-color: #f3e8ff; color: #c453eaff;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; margin-bottom: 15px;
+        }
     </style>
 </head>
-<body style="background-color: #f8f9fa;">
+<body>
 
 <?php include '../views/navbar.php'; ?>
 
 <div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card border-0 shadow">
-                <div class="card-header bg-white p-3 border-bottom">
-                    <div class="d-flex align-items-center">
-                        <div style="width: 40px; height: 40px; background: #d1fae5; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #059669; margin-right: 10px;">
-                            <i class="bi bi-person-heart"></i>
-                        </div>
-                        <div>
-                            <h5 class="mb-0 fw-bold">Counselor Support</h5>
-                            <small class="text-muted">Online • Replies typically in 1 hour</small>
-                        </div>
+    <div class="text-center mb-5">
+        <h2 class="fw-bold" style="color: #c453eaff;">Community Support Groups</h2>
+        <p class="text-muted">Join a safe space to share, listen, and heal together.</p>
+    </div>
+
+    <div class="row g-4">
+        <?php foreach ($groups as $group): ?>
+        <div class="col-md-4 col-sm-6">
+            <div class="card group-card h-100 p-4 text-center">
+                <div class="d-flex justify-content-center">
+                    <div class="icon-box">
+                        <i class="bi <?= htmlspecialchars($group['icon'] ?? 'bi-people') ?>"></i>
                     </div>
                 </div>
-                
-                <div class="card-body bg-light">
-                    <div class="chat-box mb-3" id="chatBox">
-                        <div class="message received">
-                            Hello <?= htmlspecialchars($_SESSION['name']); ?>. I am a certified counselor with GBVAid. This is a safe space. How are you feeling today?
-                        </div>
-                        </div>
-
-                    <form action="" method="POST" class="d-flex gap-2">
-                        <input type="text" class="form-control" placeholder="Type your message here..." required>
-                        <button type="button" class="btn text-white" style="background-color: #c453eaff;" onclick="alert('Real-time chat server not connected yet. This is a UI Demo.')">
-                            <i class="bi bi-send-fill"></i>
-                        </button>
-                    </form>
-                </div>
+                <h5 class="fw-bold"><?= htmlspecialchars($group['group_name']) ?></h5>
+                <p class="text-muted small mb-4"><?= htmlspecialchars($group['description']) ?></p>
+                <a href="chat_room.php?id=<?= $group['group_id'] ?>" class="btn w-100 text-white fw-bold" style="background-color: #c453eaff; border-radius: 50px;">
+                    Join Discussion
+                </a>
             </div>
         </div>
+        <?php endforeach; ?>
     </div>
 </div>
+
 </body>
 </html>

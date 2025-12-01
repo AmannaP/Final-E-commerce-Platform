@@ -14,7 +14,7 @@ $cart_items = get_user_cart_ctr($customer_id ?? $ip_add);
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Your Cart | GBVAid</title>     
+    <title>Booking List | GBVAid</title>     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <script src="../js/cart.js"></script>
@@ -29,7 +29,7 @@ $cart_items = get_user_cart_ctr($customer_id ?? $ip_add);
 
         /* 2. Navbar Styling */
         .navbar {
-            background-color: black;
+            background-color: white;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             padding: 15px 0;
         }
@@ -40,7 +40,7 @@ $cart_items = get_user_cart_ctr($customer_id ?? $ip_add);
         }
         .navbar-text {
             font-weight: 600;
-            color: #f5ebf4ff;
+            color: #555;
             border-left: 2px solid #ddd;
             padding-left: 15px;
             margin-left: 15px;
@@ -75,7 +75,7 @@ $cart_items = get_user_cart_ctr($customer_id ?? $ip_add);
         .table tbody td {
             border: none;
             padding: 15px;
-            background-color: #f5dcf2ff;
+            background-color: #fcfcfc;
         }
         .table tbody tr td:first-child {
             border-top-left-radius: 10px;
@@ -144,9 +144,9 @@ $cart_items = get_user_cart_ctr($customer_id ?? $ip_add);
 
 <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container">
-        <a class="navbar-brand" href="../index.php">GBVAid</a>
+        <a class="navbar-brand" href="../user/product_page.php">GBVAid</a>
         <div class="d-flex align-items-center">
-            <span class="navbar-text">Your Shopping Cart</span>
+            <span class="navbar-text">Your Booking List</span>
         </div>
     </div>
 </nav>
@@ -156,24 +156,24 @@ $cart_items = get_user_cart_ctr($customer_id ?? $ip_add);
         
         <?php if (empty($cart_items)) : ?>
             <div class="text-center py-5">
-                <i class="bi bi-cart-x" style="font-size: 80px; color: #e598ffff;"></i>
-                <h4 class="mt-4 text-muted">Your cart is empty</h4>
-                <p class="text-muted mb-4">Looks like you haven't added anything to your cart yet.</p>
+                <i class="bi bi-calendar-x" style="font-size: 80px; color: #e598ffff;"></i>
+                <h4 class="mt-4 text-muted">No services selected</h4>
+                <p class="text-muted mb-4">You haven't selected any support services yet.</p>
                 <a href="../user/product_page.php" class="btn btn-purple">
-                    Start Shopping
+                    Browse Services
                 </a>
             </div>
         <?php else : ?>
             
-            <h4 class="mb-4" style="color: #555;">Items in Cart</h4>
+            <h4 class="mb-4" style="color: #555;">Selected Services</h4>
 
             <div class="table-responsive">
                 <table class="table text-center">
                     <thead>
                         <tr>
-                            <th>Product</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
+                            <th>Service</th>
+                            <th>Cost</th>
+                            <th>Sessions</th>
                             <th>Subtotal</th>
                             <th>Action</th>
                         </tr>
@@ -192,7 +192,15 @@ $cart_items = get_user_cart_ctr($customer_id ?? $ip_add);
                                 <div class="d-flex align-items-center">
                                     <img src="../uploads/products/<?= htmlspecialchars($item['product_image']) ?>"
                                          width="60" height="60" class="product-img me-3">
-                                    <span class="fw-bold text-dark"><?= htmlspecialchars($item['product_title']) ?></span>
+                                    <div>
+                                        <span class="fw-bold text-dark d-block"><?= htmlspecialchars($item['product_title']) ?></span>
+                                        <?php if (!empty($item['booking_date'])): ?>
+                                            <small class="text-muted">
+                                                <i class="bi bi-calendar-event me-1"></i><?= $item['booking_date'] ?>
+                                                <i class="bi bi-clock ms-1 me-1"></i><?= $item['booking_time'] ?>
+                                            </small>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
                             </td>
 
@@ -212,7 +220,7 @@ $cart_items = get_user_cart_ctr($customer_id ?? $ip_add);
 
                             <td>
                                 <button class="btn btn-sm text-danger"
-                                        title="Remove Item"
+                                        title="Remove Service"
                                         onclick="removeFromCart(<?= $item['p_id'] ?>)">
                                     <i class="bi bi-trash3-fill fs-5"></i>
                                 </button>
@@ -227,8 +235,8 @@ $cart_items = get_user_cart_ctr($customer_id ?? $ip_add);
             <div class="row mt-4 mb-4 align-items-center">
                 <div class="col-md-6"></div>
                 <div class="col-md-6 text-end">
-                    <div class="p-3 bg-dark rounded d-inline-block" style="min-width: 250px">
-                        <span class="text-white-50">Total Amount:</span>
+                    <div class="p-3 bg-light rounded d-inline-block border" style="min-width: 250px">
+                        <span class="text-muted">Total Cost:</span>
                         <h3 class="mb-0 fw-bold" style="color: #c453eaff;">
                             GH₵ <?= number_format($total_amount, 2) ?>
                         </h3>
@@ -239,19 +247,26 @@ $cart_items = get_user_cart_ctr($customer_id ?? $ip_add);
             <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
                 <button class="btn btn-outline-custom"
                         onclick="window.location.href='../user/product_page.php'">
-                    <i class="bi bi-arrow-left me-1"></i> Continue Shopping
+                    <i class="bi bi-arrow-left me-1"></i> Add More Services
                 </button>
 
                 <div>
                     <button class="btn btn-outline-danger-custom me-2"
                             onclick="emptyCart()">
-                        Empty Cart
+                        Clear List
                     </button>
 
-                    <button class="btn btn-purple"
-                            onclick="window.location.href='checkout.php'">
-                        Proceed to Checkout <i class="bi bi-arrow-right ms-1"></i>
-                    </button>
+                    <?php if (isset($_SESSION['id'])): ?>
+                        <button class="btn btn-purple"
+                                onclick="window.location.href='checkout.php'">
+                            Confirm Bookings <i class="bi bi-arrow-right ms-1"></i>
+                        </button>
+                    <?php else: ?>
+                        <button class="btn btn-purple"
+                                onclick="window.location.href='../login/login.php?redirect=cart'">
+                            Login to Book <i class="bi bi-box-arrow-in-right ms-1"></i>
+                        </button>
+                    <?php endif; ?>
                 </div>
             </div>
 

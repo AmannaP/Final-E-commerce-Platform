@@ -48,7 +48,7 @@ function isAdmin() {
  */
 function requireAdmin(): void {
     if (!isAdmin()) {
-        header("Location: /register_sample/login/login.php");
+        header("Location: ../login/login.php");
         exit;
     }
 }

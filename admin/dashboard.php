@@ -18,7 +18,7 @@ requireAdmin();
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* Admin Navbar: Solid Purple to distinguish from User side */
+        /* Admin Navbar */
         .navbar-admin {
             background-color: #c453eaff;
             box-shadow: 0 4px 12px rgba(196, 83, 234, 0.3);
@@ -118,26 +118,18 @@ requireAdmin();
             width: 100%;
             color: white;
             transition: background 0.3s;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .btn-purple:hover {
             background-color: #a020f0;
             color: white;
         }
-        
-        .btn-secondary-custom {
-            background-color: #f8f9fa;
-            color: #999;
-            border: 1px solid #eee;
-            border-radius: 50px;
-            padding: 10px 25px;
-            width: 100%;
-        }
     </style>
 </head>
 <body>
 
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-admin navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="#"><i class="bi bi-shield-lock-fill me-2"></i>GBVAid Admin</a>
@@ -148,15 +140,9 @@ requireAdmin();
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item mx-2">
-                        <a href="../admin/brand.php" class="nav-link">Brands</a>
-                    </li>
-                    <li class="nav-item mx-2">
-                        <a href="../admin/category.php" class="nav-link">Categories</a>
-                    </li>
-                    <li class="nav-item mx-2">
-                        <a href="../admin/product.php" class="nav-link">Products</a>
-                    </li>
+                    <li class="nav-item mx-2"><a href="../admin/brand.php" class="nav-link">Brands</a></li>
+                    <li class="nav-item mx-2"><a href="../admin/category.php" class="nav-link">Categories</a></li>
+                    <li class="nav-item mx-2"><a href="../admin/product.php" class="nav-link">Services</a></li>
                     <li class="nav-item ms-4 d-flex align-items-center">
                         <span class="text-white me-3 fw-bold">
                             <?= htmlspecialchars($_SESSION['name']); ?>
@@ -168,7 +154,6 @@ requireAdmin();
         </div>
     </nav>
 
-    <!-- Main Section -->
     <div class="container dashboard-header">
         <div class="text-center mb-5">
             <h2 class="welcome-text display-5">Admin Control Center</h2>
@@ -178,7 +163,6 @@ requireAdmin();
         </div>
 
         <div class="row g-4 justify-content-center">
-            <!-- Manage Services -->
             <div class="col-md-4">
                 <div class="dashboard-card">
                     <div class="card-icon">
@@ -186,23 +170,21 @@ requireAdmin();
                     </div>
                     <h5>Manage Services</h5>
                     <p>View, create, and organize GBV support service categories such as counseling, shelters, legal aid, and emergency contacts.</p>
-                    <a href="../admin/product.php" class="btn btn-purple">Go to Services</a>
+                    <a href="../admin/product.php" class="btn-purple">Go to Services</a>
                 </div>
             </div>
 
-            <!-- Survivor Reports -->
             <div class="col-md-4">
                 <div class="dashboard-card">
                     <div class="card-icon">
                         <i class="bi bi-file-earmark-medical"></i>
                     </div>
                     <h5>Survivor Reports</h5>
-                    <p>Review and manage cases or reports submitted by users who have experienced gender-based violence.</p>
-                    <button class="btn btn-secondary-custom" disabled>Feature Coming Soon</button>
+                    <p>Review and manage confidential cases or reports submitted by users who have experienced gender-based violence.</p>
+                    <a href="../admin/reports.php" class="btn-purple">View Reports</a>
                 </div>
             </div>
 
-            <!-- Awareness Content -->
             <div class="col-md-4">
                 <div class="dashboard-card">
                     <div class="card-icon">
@@ -210,7 +192,7 @@ requireAdmin();
                     </div>
                     <h5>Awareness Content</h5>
                     <p>Post educational materials, campaigns, and preventive information to raise awareness about GBV.</p>
-                    <button class="btn btn-secondary-custom" disabled>Feature Coming Soon</button>
+                    <a href="../admin/awareness.php" class="btn-purple">Manage Content</a>
                 </div>
             </div>
         </div>

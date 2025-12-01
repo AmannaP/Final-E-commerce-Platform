@@ -4,14 +4,13 @@
 require_once("../classes/cart_class.php");
 
 /**
- * Add product to cart
- * Automatically handles product-exists logic in cart_class
+ * Add services to cart
+ * Automatically handles service-exists logic in cart_class
  */
-function add_to_cart_ctr($product_id, $ip_add, $customer_id, $qty)
+function add_to_cart_ctr($product_id, $ip_add, $customer_id, $qty, $date = null, $time = null, $notes = null)
 {
-    require_once("../classes/cart_class.php");
     $cart = new cart_class();
-    return $cart->add_to_cart($product_id, $ip_add, $customer_id, $qty);
+    return $cart->add_to_cart($product_id, $ip_add, $customer_id, $qty, $date, $time, $notes);
 }
 
 /**

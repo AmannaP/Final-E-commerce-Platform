@@ -20,18 +20,33 @@ class Customer extends db_conn {
     }
 
     /**
-     * Update customer details
+     * Update customer details including image
      */
-    public function update_customer($id, $name, $contact, $city, $country) {
-        $sql = "UPDATE customer SET 
-                customer_name = ?, 
-                customer_contact = ?, 
-                customer_city = ?, 
-                customer_country = ? 
-                WHERE customer_id = ?";
-        
-        $stmt = $this->db->prepare($sql);
-        return $stmt->execute([$name, $contact, $city, $country, $id]);
+    public function update_customer($id, $name, $contact, $city, $country, $image = null) {
+        if (!$this->db_connect()) return false;
+
+        // If an image is provided, update it. If not, keep the old one.
+        if ($image) {
+            $sql = "UPDATE customer SET 
+                    customer_name = ?, 
+                    customer_contact = ?, 
+                    customer_city = ?, 
+                    customer_country = ?,
+                    customer_image = ?
+                    WHERE customer_id = ?";
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([$name, $contact, $city, $country, $image, $id]);
+        } else {
+            // Update without changing the image
+            $sql = "UPDATE customer SET 
+                    customer_name = ?, 
+                    customer_contact = ?, 
+                    customer_city = ?, 
+                    customer_country = ? 
+                    WHERE customer_id = ?";
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([$name, $contact, $city, $country, $id]);
+        }
     }
 
     /**

@@ -211,14 +211,32 @@ $(document).ready(function () {
                                 : `../uploads/products/default.jpg`;
 
                             container.append(`
-                                <div class="col-md-4">
-                                    <div class="card product-card p-3 shadow-sm">
-                                        <img src="${imgUrl}" class="card-img-top mb-3" alt="${p.product_title}" style="height:200px;object-fit:cover;border-radius:10px;">
-                                        <h5 class="fw-bold">${p.product_title}</h5>
-                                        <p class="text-muted mb-1"><strong>Category:</strong> ${p.cat_name}</p>
-                                        <p class="text-muted mb-1"><strong>Brand:</strong> ${p.brand_name}</p>
-                                        <p><strong>Price:</strong> GH₵${p.product_price}</p>
-                                        <a href="../views/single_product.php?id=${p.product_id}" class="btn btn-custom w-100 mt-2">View Details</a>
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <div class="card product-card h-100 shadow-sm border-0" style="border-radius: 12px; overflow: hidden;">
+                                        <a href="service_details.php?id=${p.product_id}" style="text-decoration:none;">
+                                            <img src="${imgUrl}" class="card-img-top" alt="${p.product_title}" 
+                                                style="height: 220px; object-fit: cover;">
+                                        </a>
+                                        
+                                        <div class="card-body d-flex flex-column p-3">
+                                            <h5 class="fw-bold text-dark text-truncate">${p.product_title}</h5>
+                                            
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <small class="text-muted"><i class="bi bi-tag"></i> ${p.cat_name}</small>
+                                                <small class="text-muted"><i class="bi bi-shop"></i> ${p.brand_name}</small>
+                                            </div>
+                                            
+                                            <div class="mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
+                                                <span class="fw-bold" style="color: #c453eaff; font-size: 1.1rem;">
+                                                    GH₵ ${parseFloat(p.product_price).toFixed(2)}
+                                                </span>
+                                                
+                                                <a href="service_details.php?id=${p.product_id}" class="btn text-white fw-bold btn-sm px-3" 
+                                                style="background-color: #c453eaff; border-radius: 50px;">
+                                                    Book Session
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             `);

@@ -22,15 +22,42 @@ if (empty($name) || empty($contact)) {
     exit();
 }
 
-// You need to add this function to your controller/class
-// Assuming you will add update_customer_ctr($id, $name, $contact, $city, $country)
-$result = update_customer_ctr($user_id, $name, $contact, $city, $country);
+// IMAGE UPLOAD LOGIC
+$image_name = null;
+
+if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === 0) {
+    $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+    $filename = $_FILES['profile_image']['name'];
+    $file_tmp = $_FILES['profile_image']['tmp_name'];
+    $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+    if (in_array($ext, $allowed)) {
+        // Create unique name
+        $new_name = "user_" . $user_id . "_" . uniqid() . "." . $ext;
+        $upload_dir = "../uploads/users/";
+
+        // Create folder if not exists
+        if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+
+        if (move_uploaded_file($file_tmp, $upload_dir . $new_name)) {
+            $image_name = $new_name;
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Failed to upload image. Check folder permissions.']);
+            exit();
+        }
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Invalid file type. Only JPG, PNG, WEBP allowed.']);
+        exit();
+    }
+}
+
+// Update Database
+$result = update_customer_ctr($user_id, $name, $contact, $city, $country, $image_name);
 
 if ($result) {
-    // Update session name if changed
-    $_SESSION['name'] = $name;
+    $_SESSION['name'] = $name; // Update session name
     echo json_encode(['status' => 'success', 'message' => 'Profile updated successfully']);
 } else {
-    echo json_encode(['status' => 'error', 'message' => 'Failed to update profile']);
+    echo json_encode(['status' => 'error', 'message' => 'Database update failed']);
 }
 ?>
