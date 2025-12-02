@@ -22,4 +22,10 @@ function cancel_appointment_ctr($appt_id, $customer_id){
     $appt = new Appointment();
     return $appt->cancel_appointment($appt_id, $customer_id);
 }
+
+function get_all_bookings_admin_ctr() {
+    $appt = new Appointment();
+    return $appt->get_all_bookings_admin();
+}
+
 ?>

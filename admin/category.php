@@ -149,7 +149,6 @@ if (!isAdmin()) {
                     <li class="nav-item mx-2"><a href="../admin/dashboard.php" class="nav-link">Dashboard</a></li>
                     <li class="nav-item mx-2"><a href="../admin/brand.php" class="nav-link">Brands</a></li>
                     <li class="nav-item mx-2"><a href="../admin/category.php" class="nav-link active">Categories</a></li>
-                    <li class="nav-item mx-2"><a href="../admin/product.php" class="nav-link">Products</a></li>
                     <li class="nav-item ms-4">
                         <a href="../login/logout.php" class="btn-logout">Logout</a>
                     </li>

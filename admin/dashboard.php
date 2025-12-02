@@ -142,7 +142,6 @@ requireAdmin();
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item mx-2"><a href="../admin/brand.php" class="nav-link">Brands</a></li>
                     <li class="nav-item mx-2"><a href="../admin/category.php" class="nav-link">Categories</a></li>
-                    <li class="nav-item mx-2"><a href="../admin/product.php" class="nav-link">Services</a></li>
                     <li class="nav-item ms-4 d-flex align-items-center">
                         <span class="text-white me-3 fw-bold">
                             <?= htmlspecialchars($_SESSION['name']); ?>
@@ -193,6 +192,17 @@ requireAdmin();
                     <h5>Awareness Content</h5>
                     <p>Post educational materials, campaigns, and preventive information to raise awareness about GBV.</p>
                     <a href="../admin/awareness.php" class="btn-purple">Manage Content</a>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="dashboard-card">
+                    <div class="card-icon">
+                        <i class="bi bi-file-earmark-medical"></i>
+                    </div>
+                    <h5>Appointments Reports</h5>
+                    <p>Manage appointment bookings made by users on various services and brands.</p>
+                    <a href="../admin/bookings.php" class="btn-purple">View Reports</a>
                 </div>
             </div>
         </div>

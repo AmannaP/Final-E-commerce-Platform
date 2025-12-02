@@ -167,7 +167,6 @@ $brands = fetch_brands_ctr();
                     <li class="nav-item mx-2"><a href="../admin/dashboard.php" class="nav-link">Dashboard</a></li>
                     <li class="nav-item mx-2"><a href="../admin/brand.php" class="nav-link">Brands</a></li>
                     <li class="nav-item mx-2"><a href="../admin/category.php" class="nav-link">Categories</a></li>
-                    <li class="nav-item mx-2"><a href="../admin/product.php" class="nav-link active">Services</a></li>
                     <li class="nav-item ms-4">
                         <a href="../login/logout.php" class="btn-logout">Logout</a>
                     </li>

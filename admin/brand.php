@@ -155,7 +155,6 @@ $categories = fetch_categories_ctr();
                     <li class="nav-item mx-2"><a href="../admin/dashboard.php" class="nav-link">Dashboard</a></li>
                     <li class="nav-item mx-2"><a href="../admin/brand.php" class="nav-link active">Brands</a></li>
                     <li class="nav-item mx-2"><a href="../admin/category.php" class="nav-link">Categories</a></li>
-                    <li class="nav-item mx-2"><a href="../admin/product.php" class="nav-link">Products</a></li>
                     <li class="nav-item ms-4">
                         <a href="../login/logout.php" class="btn-logout">Logout</a>
                     </li>
@@ -225,18 +224,6 @@ $categories = fetch_categories_ctr();
                             </thead>
                             <tbody>
                                 <!-- Brands will be dynamically loaded by JS -->
-                                <!-- Example row for styling check -->
-                                <!-- 
-                                <tr>
-                                    <td>1</td>
-                                    <td>Sample Brand</td>
-                                    <td>Sample Category</td>
-                                    <td class="text-center">
-                                        <button class="btn btn-warning btn-sm btn-action text-white me-1"><i class="bi bi-pencil-fill"></i></button>
-                                        <button class="btn btn-danger btn-sm btn-action"><i class="bi bi-trash-fill"></i></button>
-                                    </td>
-                                </tr> 
-                                -->
                             </tbody>
                         </table>
                     </div>

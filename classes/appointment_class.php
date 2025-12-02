@@ -61,5 +61,30 @@ class Appointment extends db_conn {
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([$appt_id, $customer_id]);
     }
+
+    /**
+     * Get ALL bookings for Admin (Joined with Category & Brand)
+     */
+    public function get_all_bookings_admin() {
+        if (!$this->db_connect()) return [];
+
+        $sql = "SELECT 
+                    a.*, 
+                    c.customer_name, 
+                    c.customer_contact,
+                    p.product_title, 
+                    cat.cat_name, 
+                    b.brand_name
+                FROM appointments a
+                JOIN customer c ON a.customer_id = c.customer_id
+                JOIN products p ON a.service_id = p.product_id
+                JOIN categories cat ON p.product_cat = cat.cat_id
+                JOIN brands b ON p.product_brand = b.brand_id
+                ORDER BY a.appointment_date DESC, a.appointment_time ASC";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>
